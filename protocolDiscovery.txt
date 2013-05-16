@@ -1,3 +1,42 @@
+general format:
+cc - command code
+nn - value
+F0 7E 00 07 02 01 00 03 cc nn [nn2 nn3 ...] F7
+
+Manual trigger of 'recording' or 'ready' light:
+cc = 08
+nn = 0 // turn the light off
+nn = 1 // turn the 'ready' light on
+nn = 2 // turn the 'recording' light on
+
+Set the light dimming level (common):
+cc = 02
+nn = 1 .. 7F (1 - max brightness, 7F - min brightness)
+
+Set colour:
+cc = 40 + colour channel + light index
+nn = 1 .. 7F (1 - max, 7F - min; the meaning is actually the amount of dimming of particular colour channel)
+colour channel: Red ~ 0, Green ~ 10, Blue ~ 20
+light index: 'recording' ~ 0, 'ready' ~ 1, 'cue' ~ 2, 'note1' ~ 3, 'note2' ~ 4...
+
+Any colour command will automatically turn the light on for about 1-2 seconds for the live preview purpose (but the light can be turned off by manual trigger command even during this preview interval).
+RGB values for a given light are stored in EEPROM, so once you set it, it is retained even after you unplug and replug the device.
+The common brightness (Dim level) value is also stored in EEPROM.
+(The actual storage to EEPROM is delayed, so if there are many continuous changes, the EEPROM won't suffer from excessive overwrites - it's protected.)
+Please note that combinations of RGB values can affect the brightness.
+
+An example how to turn the lamp on to orange using the 'recording' light:
+F0 7E 00 07 02 01 00 03 40 01 F7 // set the red channel of 'recording' light to 01 (minimal dim = max presence)
+F0 7E 00 07 02 01 00 03 50 40 F7 // set the green channel of 'recording' light to 40 (middle)
+F0 7E 00 07 02 01 00 03 60 7F F7 // set the blue channel of 'recording' light to 7F (maximal dim = no presence)
+F0 7E 00 07 02 01 00 03 08 02 F7 // keep the 'recording' light on
+
+F0 7E 00 07 02 01 00 03 08 00 F7 // turn the light off
+
+Lamp RGB values 01407F correspond to traditional RGB values FF7F00.
+Classic RGB values need to be reversed, scaled down and shifted to start from 1.
+
+
 ===================== Light On/Off ==============================
 Record On:
 0x14, 0xF0, 0x7E, 0x00, 0x14, 0x07, 0x02, 0x01, 0x14, 0x00, 0x03, 0x08, 0x16, 0x02, 0xF7, 0x00
