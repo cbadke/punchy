@@ -2,25 +2,27 @@
 
         open System
 
-        let MessageStart = seq [ 0x14uy; 0xF0uy; 0x7Euy; 0x00uy; 0x14uy; 0x07uy; 0x02uy; 0x01uy; 0x14uy; 0x00uy; 0x03uy ]
-        let MessageSpace = seq [ 0x16uy ]
-        let MessageEnd = seq [ 0xF7uy; 0x00uy ]
+        let MessageStart = seq [ 0xF0uy; 0x7Euy; 0x00uy; 0x07uy; 0x02uy; 0x01uy; 0x00uy; 0x03uy ]
+        let MessageEnd = seq [ 0xF7uy; ]
 
-        type LightCommand = 
+        type Command =
+                | Brightness = 0x02uy
+                | Trigger = 0x08uy
+                | Color = 0x40uy
+
+        type ColourChannel =
+                | Red = 0x00uy
+                | Green = 0x10uy
+                | Blue = 0x20uy
+
+        type LightIndex =
                 | Record = 0x00uy
                 | Ready = 0x01uy
                 | Cue = 0x02uy
                 | Note1 = 0x03uy
                 | Note2 = 0x04uy
 
-        type Command = 
-                | SetBrightness = 0x02uy
-                | SetLight = 0x08uy
-                | SetRed = 0x40uy
-                | SetGreen = 0x50uy
-                | SetBlue = 0x60uy
-
-        type SetLightArguments =
+        type TriggerIndex =
                 | Off = 0x00uy
                 | Ready = 0x01uy
                 | Record = 0x02uy
