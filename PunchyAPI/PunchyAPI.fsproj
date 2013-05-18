@@ -43,7 +43,6 @@
   <ItemGroup>
     <Compile Include="CommandBuilder.fs" />
     <Compile Include="NativeMidi.fs" />
-    <Compile Include="NativeWrapper.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
