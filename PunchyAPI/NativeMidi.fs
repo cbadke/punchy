@@ -1,4 +1,5 @@
 ﻿namespace Punchy
+#nowarn "9"
 
     module internal Native =
 
