@@ -46,10 +46,26 @@
                 val mutable wChannelMask : UInt16
                 val mutable dwSupport : UInt32
             end
-        
         let MIDIOUTCAPS_SIZE = uint32 (Marshal.SizeOf(typeof<MIDIOUTCAPS>))
 
-        type Handle = IntPtr
+        [<StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)>]
+        type MIDIHDR =
+            struct
+                val mutable lpData : IntPtr
+                val mutable dwBufferLength : UInt32
+                val mutable dwBytesRecorded : UInt32
+                val mutable dwUser : IntPtr
+                val mutable dwFlags : UInt32
+                val mutable lpNext : IntPtr
+                val mutable reserved : IntPtr
+                val mutable dwOffSet : UInt32
+
+                [<MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)>]
+                val mutable dwReserved : byte array
+            end
+        let MIDIHDR_SIZE = 48u
+
+        type HMIDIOUT = IntPtr
 
         [<DllImport(@"winmm.dll", EntryPoint="midiOutGetNumDevs")>]
         extern UInt32 midiOutGetNumDevs()
@@ -62,7 +78,7 @@
 
         [<DllImport(@"winmm.dll", EntryPoint="midiOutOpen")>]
         extern MMRESULT midiOutOpen(
-            Handle& lphmo,
+            HMIDIOUT& lphmo,
             UInt32 uDeviceID,
             IntPtr dwCallback,
             IntPtr dwCallbackInstance,
@@ -70,4 +86,22 @@
 
         [<DllImport(@"winmm.dll", EntryPoint="midiOutClose")>]
         extern MMRESULT midiOutClose(
-            Handle hmo);
+            HMIDIOUT hmo);
+
+        [<DllImport(@"winmm.dll", EntryPoint="midiOutPrepareHeader")>]
+        extern MMRESULT midiOutPrepareHeader(
+            HMIDIOUT hmo,
+            MIDIHDR& lpMidiOutHdr,
+            UInt32 cbMidiOutHdr);
+
+        [<DllImport(@"winmm.dll", EntryPoint="midiOutUnprepareHeader")>]
+        extern MMRESULT midiOutUnprepareHeader(
+            HMIDIOUT hmo,
+            MIDIHDR& lpMidiOutHdr,
+            UInt32 cbMidiOutHdr);
+
+        [<DllImport(@"winmm.dll", EntryPoint="midiOutLongMsg")>]
+        extern MMRESULT midiOutLongMsg(
+            HMIDIOUT hmo,
+            MIDIHDR& lpMidiOutHdr,
+            UInt32 cbMidiOutHdr);
