@@ -1,6 +1,6 @@
 ﻿namespace Punchy
     module Constants =
-        type ColorStore =
+        type ColorSlot =
             | Color1
             | Color2
             | Flash

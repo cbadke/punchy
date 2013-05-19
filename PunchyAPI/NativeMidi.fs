@@ -108,6 +108,9 @@
                 MIDIHDR& lpMidiOutHdr,
                 UInt32 cbMidiOutHdr);
 
+            [<DllImport(@"winmm.dll", EntryPoint="midiOutReset")>]
+            extern MMRESULT midiOutReset( HMIDIOUT hmo );
+
         let AvailableDevices() =
             let Connectable id =
                 let mutable handle = IntPtr.Zero
@@ -147,11 +150,21 @@
                 packet.dwUser <- IntPtr.Zero
 
                 Import.midiOutPrepareHeader(handle, &packet, MIDIHDR_SIZE) |> ignore
-                Import.midiOutLongMsg(handle, &packet, MIDIHDR_SIZE) |> ignore
+                let response = Import.midiOutLongMsg(handle, &packet, MIDIHDR_SIZE)
                 Import.midiOutUnprepareHeader(handle, &packet, MIDIHDR_SIZE) |> ignore
 
                 Marshal.FreeCoTaskMem(dp)
 
                 Import.midiOutClose(handle) |> ignore
-                true
+
+                response = MMRESULT.Success
+            | _ -> false
+
+        let Reset id =
+            let mutable handle = IntPtr.Zero
+            match Import.midiOutOpen(&handle, id, IntPtr.Zero, IntPtr.Zero, 0u) with
+            | MMRESULT.Success ->
+                let result = Import.midiOutReset(handle) = MMRESULT.Success
+                Import.midiOutClose(handle) |> ignore
+                result
             | _ -> false

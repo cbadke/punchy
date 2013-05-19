@@ -12,7 +12,7 @@
             static member Trigger = 0x08uy
             static member Color = 0x40uy
 
-        type private ColourChannel =
+        type private ColorChannel =
             static member Red = 0x00uy
             static member Green = 0x10uy
             static member Blue = 0x20uy
@@ -39,9 +39,29 @@
 
         let DeactivateLight() = BuildCommand Command.Trigger TriggerIndex.Off
 
-        let ActivateLight color =
-            let light = match color with
+        let ActivateLight colorSlot =
+            let light = match colorSlot with
                         | Color1 -> TriggerIndex.Ready
                         | Color2 -> TriggerIndex.Record
                         | Flash -> TriggerIndex.Cue
             BuildCommand Command.Trigger light
+
+        let private SaveColor channelValue channel colorSlot =
+            let light = match colorSlot with
+                        | Color1 -> LightIndex.Ready
+                        | Color2 -> LightIndex.Record
+                        | Flash -> LightIndex.Cue
+            let cmd = Command.Color + light + channel
+            BuildCommand cmd (ConvertToHalfByte channelValue)
+
+        let SaveRedColor (color:System.Drawing.Color) colorSlot =
+            SaveColor color.R ColorChannel.Red colorSlot
+
+        let SaveGreenColor (color:System.Drawing.Color) colorSlot =
+            SaveColor color.G ColorChannel.Green colorSlot
+
+        let SaveBlueColor (color:System.Drawing.Color) colorSlot =
+            SaveColor color.B ColorChannel.Blue colorSlot
+
+        let SetBrightness brightness =
+            BuildCommand Command.Brightness (ConvertToHalfByte brightness)
