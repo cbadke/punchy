@@ -43,6 +43,7 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.fs" />
     <Compile Include="CommandBuilder.fs" />
     <Compile Include="NativeMidi.fs" />
     <Compile Include="API.fs" />
