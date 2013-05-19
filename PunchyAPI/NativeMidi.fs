@@ -131,7 +131,6 @@
             |> Seq.filter (fun x -> (snd x) = "MIDIOUT2 (PunchLight USB)")
             |> Seq.filter (fun x -> Connectable (fst x))
             |> Seq.map fst
-            |> Seq.toList
 
         let SendData data id =
             let mutable handle = IntPtr.Zero

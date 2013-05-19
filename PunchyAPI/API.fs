@@ -24,4 +24,4 @@
                 Native.SendData data id
 
         let GetLights() =
-            Native.AvailableDevices() |> List.map (fun x -> new Light(x))
+            Native.AvailableDevices() |> Seq.map (fun x -> new Light(x))
