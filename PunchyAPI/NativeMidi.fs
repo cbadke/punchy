@@ -121,7 +121,7 @@
                 | _ -> false
             let deviceCount = Import.midiOutGetNumDevs()
             let names = seq {
-                for i in 1u .. deviceCount do
+                for i = 1u to deviceCount do
                     let mutable caps = new MIDIOUTCAPS()
                     match Import.midiOutGetDevCaps(UIntPtr (i-1u), &caps, MIDIOUTCAPS_SIZE) with
                     | MMRESULT.Success -> yield (i-1u, caps.szPname)

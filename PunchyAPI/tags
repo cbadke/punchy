@@ -1,0 +1,3 @@
+DeactivateLight	API.fs	/^                let data = CommandBuilder.Deactiva/
+SaveRedColor	CommandBuilder.fs	/^        let SaveRedColor (color:System.Drawing.Col/
+midiOutOpen	NativeMidi.fs	/^                match Import.midiOutOpen(&handle, /
