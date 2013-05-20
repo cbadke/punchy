@@ -137,15 +137,16 @@
             match Import.midiOutOpen(&handle, id, IntPtr.Zero, IntPtr.Zero, 0u) with
             | MMRESULT.Success ->
                 let mutable packet = new MIDIHDR()
-                let dp = Marshal.AllocCoTaskMem(Array.length data)
+                let dp = Marshal.AllocCoTaskMem(List.length data)
 
-                for i in 0 .. ((Array.length data) - 1) do
-                    let t = IntPtr(dp.ToInt32() + i)
-                    Marshal.StructureToPtr(data.[i], t, false)
+                data
+                |> List.iteri (fun i datum ->
+                        let t = IntPtr(dp.ToInt32() + i)
+                        Marshal.StructureToPtr(datum, t, false))
 
                 packet.lpData <- IntPtr (dp.ToPointer())
-                packet.dwBufferLength <- uint32 (Array.length data)
-                packet.dwBytesRecorded <- uint32 (Array.length data)
+                packet.dwBufferLength <- uint32 (List.length data)
+                packet.dwBytesRecorded <- uint32 (List.length data)
                 packet.dwUser <- IntPtr.Zero
 
                 Import.midiOutPrepareHeader(handle, &packet, MIDIHDR_SIZE) |> ignore
