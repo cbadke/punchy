@@ -128,8 +128,8 @@
                     | _ -> ();
             }
             names
-            |> Seq.filter (fun x -> (snd x) = "MIDIOUT2 (PunchLight USB)")
-            |> Seq.filter (fun x -> Connectable (fst x))
+            |> Seq.filter (fun (_,x) -> x = "MIDIOUT2 (PunchLight USB)")
+            |> Seq.filter (fun (x,_) -> Connectable x)
             |> Seq.map fst
 
         let SendData data id =
@@ -159,11 +159,3 @@
                 response = MMRESULT.Success
             | _ -> false
 
-        let Reset id =
-            let mutable handle = IntPtr.Zero
-            match Import.midiOutOpen(&handle, id, IntPtr.Zero, IntPtr.Zero, 0u) with
-            | MMRESULT.Success ->
-                let result = Import.midiOutReset(handle) = MMRESULT.Success
-                Import.midiOutClose(handle) |> ignore
-                result
-            | _ -> false
