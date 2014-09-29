@@ -128,7 +128,7 @@
                     | _ -> ();
             }
             names
-            |> Seq.filter (fun x -> (snd x) = "MIDIOUT2 (PunchLight USB)")
+            |> Seq.filter (fun x -> (snd x).StartsWith("MIDIOUT2 (PunchLight"))
             |> Seq.filter (fun x -> Connectable (fst x))
             |> Seq.map fst
 
