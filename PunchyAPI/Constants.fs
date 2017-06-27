@@ -3,4 +3,7 @@
         type ColorSlot =
             | Color1
             | Color2
-            | Flash
+            | Color3
+            | Color4
+            | Color5
+            | Color6

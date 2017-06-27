@@ -128,7 +128,7 @@
                     | _ -> ();
             }
             names
-            |> Seq.filter (fun x -> (snd x) = "MIDIOUT2 (PunchLight USB)")
+            |> Seq.filter (fun x -> (snd x).StartsWith("MIDIOUT2 (PunchLight"))
             |> Seq.filter (fun x -> Connectable (fst x))
             |> Seq.map fst
 
@@ -138,10 +138,10 @@
             | MMRESULT.Success ->
                 let mutable packet = new MIDIHDR()
                 let dp = Marshal.AllocCoTaskMem(Array.length data)
+                let t = IntPtr(dp.ToPointer())
 
                 for i in 0 .. ((Array.length data) - 1) do
-                    let t = IntPtr(dp.ToInt32() + i)
-                    Marshal.StructureToPtr(data.[i], t, false)
+                    Marshal.StructureToPtr(data.[i], IntPtr.Add(t,i), false)
 
                 packet.lpData <- IntPtr (dp.ToPointer())
                 packet.dwBufferLength <- uint32 (Array.length data)

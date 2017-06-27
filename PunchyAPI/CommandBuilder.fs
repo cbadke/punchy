@@ -23,12 +23,16 @@
             static member Cue = 0x02uy
             static member Note1 = 0x03uy
             static member Note2 = 0x04uy
+            static member Beat = 0x05uy
 
         type private TriggerIndex =
             static member Off = 0x00uy
             static member Ready = 0x01uy
             static member Record = 0x02uy
-            static member Cue = 0x03uy
+            static member Cue = 0x04uy
+            static member Note1 = 0x05uy
+            static member Note2 = 0x06uy
+            static member Beat = 0x07uy
 
         let private ConvertToHalfByte (value : byte) =
             let valueToConvert = if value > 0xFDuy then 0xFDuy else value
@@ -43,14 +47,20 @@
             let light = match colorSlot with
                         | Color1 -> TriggerIndex.Ready
                         | Color2 -> TriggerIndex.Record
-                        | Flash -> TriggerIndex.Cue
+                        | Color3 -> TriggerIndex.Cue
+                        | Color4 -> TriggerIndex.Note1
+                        | Color5 -> TriggerIndex.Note2
+                        | Color6 -> TriggerIndex.Beat
             BuildCommand Command.Trigger light
 
         let private SaveColor channelValue channel colorSlot =
             let light = match colorSlot with
                         | Color1 -> LightIndex.Ready
                         | Color2 -> LightIndex.Record
-                        | Flash -> LightIndex.Cue
+                        | Color3 -> LightIndex.Cue
+                        | Color4 -> LightIndex.Note1
+                        | Color5 -> LightIndex.Note2
+                        | Color6 -> LightIndex.Beat
             let cmd = Command.Color + light + channel
             BuildCommand cmd (ConvertToHalfByte channelValue)
 
